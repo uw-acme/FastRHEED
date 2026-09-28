@@ -1,3 +1,6 @@
 [submodule "Rheed-Folo"]
 	path = Rheed-Folo
 	url = git@github.com:uw-acme/Rheed-Folo.git
+[submodule "Rheed-Gaussian"]
+	path = Rheed-Gaussian
+	url = git@github.com:uw-acme/Rheed-Gaussian.git
