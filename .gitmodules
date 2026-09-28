@@ -1,0 +1,3 @@
+[submodule "Rheed-Folo"]
+	path = Rheed-Folo
+	url = git@github.com:uw-acme/Rheed-Folo.git
