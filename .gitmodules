@@ -7,3 +7,6 @@
 [submodule "Rheed-HW"]
 	path = Rheed-HW
 	url = git@github.com:uw-acme/Rheed-HW.git
+[submodule "Rheed-Eval"]
+	path = Rheed-Eval
+	url = https://github.com/uw-acme/Rheed-Eval.git
