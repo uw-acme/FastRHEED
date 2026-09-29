@@ -1,9 +1,11 @@
 [submodule "Rheed-Folo"]
 	path = Rheed-Folo
 	url = git@github.com:uw-acme/Rheed-Folo.git
+	branch = abdel_dev
 [submodule "Rheed-Gaussian"]
 	path = Rheed-Gaussian
 	url = git@github.com:uw-acme/Rheed-Gaussian.git
+	branch = abdel_dev
 [submodule "Rheed-HW"]
 	path = Rheed-HW
 	url = git@github.com:uw-acme/Rheed-HW.git
