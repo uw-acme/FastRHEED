@@ -6,7 +6,8 @@ by many seeds look solid), plus the ground-truth spot centres. Same box geometry
 inference.py's topcrop_out.png: box top-left = 8*cell - 20, minus the 10 px pad for the padded
 eval commits (score_hits.UNPADDED lists the unpadded ones).
 
-Writes <out>/<step>/topcrop_out_<sim>.png.
+Writes <out>/<step>/topcrop_out_<sim>.png, and the same figures as one PDF per step with a page
+per synthetic frame (SIMS order): <out>/<step>/topcrop_overlay_<step>.pdf.
 
 Usage: plot_topcrop_overlay.py [--alpha 0.15] [--archive DIR] [--steps old 00 ...] [--out DIR]
 """
@@ -20,6 +21,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.patches import Rectangle
 
 from score_hits import PAD, R, SIMS, SYNTH, UNPADDED, run_info
@@ -54,7 +56,8 @@ def collect_cells(archive, steps):
     return runs
 
 
-def plot(frame, truth, corners, alpha, title, path):
+def plot(frame, truth, corners, alpha, title, path, pdf):
+    """Save the overlay figure to the PNG at path and append it as a page to pdf (a PdfPages)."""
     fig, ax = plt.subplots(figsize=(5.5, 4.5), layout="constrained")
     im = ax.imshow(frame, cmap=CMAP, vmin=0, vmax=frame.max(), interpolation="none")
     for x0, y0 in corners:
@@ -67,6 +70,7 @@ def plot(frame, truth, corners, alpha, title, path):
     ax.legend(loc="lower right", fontsize=7, framealpha=0.6)
     fig.colorbar(im, ax=ax, shrink=0.8, label="counts")
     fig.savefig(path, dpi=150)
+    pdf.savefig(fig)
     plt.close(fig)
 
 
@@ -89,10 +93,11 @@ def main():
             print(f"{step}: no complete runs, skipped")
             continue
         (out / step).mkdir(parents=True, exist_ok=True)
-        for s in SIMS:
-            corners = np.concatenate([c[s] for _, c in runs[step]]).reshape(-1, 2)
-            title = f"step {step}, {s}: TopCrop boxes of {len(runs[step])} models"
-            plot(frames[s], truth[s], corners, args.alpha, title, out / step / f"topcrop_out_{s}.png")
+        with PdfPages(out / step / f"topcrop_overlay_{step}.pdf") as pdf:
+            for s in SIMS:
+                corners = np.concatenate([c[s] for _, c in runs[step]]).reshape(-1, 2)
+                title = f"step {step}, {s}: TopCrop boxes of {len(runs[step])} models"
+                plot(frames[s], truth[s], corners, args.alpha, title, out / step / f"topcrop_out_{s}.png", pdf)
         print(f"{step}: {len(runs[step])} runs -> {out / step}")
 
 
